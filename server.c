@@ -16,11 +16,11 @@ int errno;
 int main()
 {
 
-  int sd;
+  int sd, numberOfQuestions = 15, counter = 0;
   int client;
   int option = 1;
   char buffer[1024];
-  int ids[9] = {0};
+  int ids[16] = {0};
   struct sockaddr_in serverAddr; // server
   struct sockaddr_in newAddr;    // client
 
@@ -84,10 +84,13 @@ int main()
       while (1)
       {
         char question[200] = "", answer[100] = "";
-        int idQuestion = pickQuestion(ids);
-        if (idQuestion > 0 && idQuestion < 9)
+        int idQuestion = pickQuestion(ids, numberOfQuestions);
+        if (counter < numberOfQuestions)
+        {
           getQuestion(idQuestion, question);
-        else
+          counter++;
+        }
+        if(counter == numberOfQuestions)
         {
           printf("INTREBARI TERMINATE \tSCOR FINAL: %d\n", score);
           writeScore(client, score);

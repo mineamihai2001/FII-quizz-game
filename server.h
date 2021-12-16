@@ -55,11 +55,11 @@ int signin(int client)
   }
 }
 
-int pickQuestion(int ids[])
+int pickQuestion(int ids[], int numberOfQuestions)
 {
-  int idQuestion = rand() % 7 + 1;
+  int idQuestion = rand() % numberOfQuestions + 1;
   while (ids[idQuestion])
-    idQuestion = rand() % 8;
+    idQuestion = rand() % numberOfQuestions + 1;
   ids[idQuestion] = 1;
   return idQuestion;
 }

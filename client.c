@@ -15,7 +15,7 @@ int errno;
 
 int main()
 {
-  int sd, counter = 0, numberOfQuestions = 7;
+  int sd, counter = 0, numberOfQuestions = 14;
   struct sockaddr_in serverAddr;
   char username[100], password[100];
 
@@ -47,6 +47,7 @@ int main()
     if (isLogged(sd, username))
       break;
   }
+  printf("Se porneste jocul. Nu apasati nicio tasta\n");
   sleep(3);
   system("clear");
   printf("Asteptare intrebare.\n");
