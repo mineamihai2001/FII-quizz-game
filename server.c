@@ -6,7 +6,8 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include "functions.h"
+#include <fcntl.h>
+#include "server.h"
 
 #define PORT 2728
 
@@ -20,8 +21,8 @@ int main()
   int option = 1;
   char buffer[1024];
   int ids[9] = {0};
-  struct sockaddr_in serverAddr;
-  struct sockaddr_in newAddr;
+  struct sockaddr_in serverAddr; // server
+  struct sockaddr_in newAddr;    // client
 
   socklen_t addr_size;
   pid_t pid;
@@ -48,7 +49,7 @@ int main()
   {
     printf("Asteptare clienti....\n");
   }
-  else if(lis < 0)
+  else if (lis < 0)
   {
     perror("Eroare la lilsten\n");
     return errno;
@@ -68,44 +69,44 @@ int main()
     if ((pid = fork()) == -1)
     {
       close(client);
-      continue;
+      // continue;
+      perror("Eroare la fork\n");
+      return errno;
     }
-
     if (pid == 0)
     {
-      close(sd);
-
-      //loop pentru verificare credentiale
+      // verificare credentiale
       while (1)
       {
         if (signin(client))
           break;
       }
-
-      //loop pentru comunicare cu clientul
+      // comunicare cu clientul
       while (1)
       {
-        char question[100], answer[100];
+        char question[200] = "", answer[100] = "";
         int idQuestion = pickQuestion(ids);
         if (idQuestion > 0 && idQuestion < 9)
           getQuestion(idQuestion, question);
         else
         {
           printf("INTREBARI TERMINATE \tSCOR FINAL: %d\n", score);
-          break;
+          close(client);
+          close(sd);
+          return 0;
         }
         printf("Intrebare: %s\t%d\n", question, score);
-
         writeQuestion(client, question);
         readAnswer(client, answer);
         if (addPoints(idQuestion, client, answer, inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port), score) == 0)
-          break; //optiunea quit
+        {
+          close(client);
+          break; // optiunea quit
+        }
         score += 100;
       }
     }
   }
-
-  close(client);
 
   return 0;
 }

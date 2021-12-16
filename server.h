@@ -66,19 +66,21 @@ int pickQuestion(int ids[])
 
 int writeQuestion(int client, char question[])
 {
-  //trimitere intrebare
+  // trimitere intrebare
+  question[strlen(question)] = '\0';
   if ((write(client, question, strlen(question))) < 0)
   {
     perror("Eroare la trimitere intrebare\n");
     return errno;
   }
-  printf("Intrebare trimisa cu succes\n");
+  else
+    printf("Intrebare trimisa cu succes:%s\n", question);
   return 1;
 }
 
 int readAnswer(int client, char answer[])
 {
-  //primire raspuns
+  // primire raspuns
   if ((read(client, answer, 1024)) < 0)
   {
     perror("Eroare la primire raspuns\n");
@@ -98,7 +100,9 @@ int addPoints(int id, int client, char answer[], char *address, int port, int sc
   }
   if (checkAnswer(id, answer) == 1)
   {
-    if ((write(client, "Raspuns corect", 15)) < 0)
+    strcpy(response, "Raspuns corect");
+    response[strlen(response)] = '\0';
+    if ((write(client, response, strlen(response))) < 0)
     {
       perror("Eroare la trimitere intrebare\n");
       return errno;
@@ -106,7 +110,9 @@ int addPoints(int id, int client, char answer[], char *address, int port, int sc
   }
   else
   {
-    if ((write(client, "Raspuns gresit", 15)) < 0)
+    strcpy(response, "Raspuns gresit");
+    response[strlen(response)] = '\0';
+    if ((write(client, response, strlen(response))) < 0)
     {
       perror("Eroare la trimitere intrebare\n");
       return errno;
