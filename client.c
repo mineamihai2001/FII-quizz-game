@@ -15,11 +15,11 @@ int errno;
 
 int main()
 {
-
-  int sd, ret;
+  int sd, counter = 0, numberOfQuestions = 7;
   struct sockaddr_in serverAddr;
-  char buffer[1024];
   char username[100], password[100];
+
+  system("clear");
 
   sd = socket(AF_INET, SOCK_STREAM, 0);
   if (sd < 0)
@@ -47,13 +47,31 @@ int main()
     if (isLogged(sd, username))
       break;
   }
+  sleep(3);
+  system("clear");
+  printf("Asteptare intrebare.\n");
+  sleep(1);
+  system("clear");
+  printf("Asteptare intrebare..\n");
+  sleep(1);
+  system("clear");
+
   // comunicare cu serverul
   while (1)
   {
+    printf("Asteptare intrebare...\n");
+    sleep(3);
+    system("clear");
+    if (counter == numberOfQuestions)
+    {
+      getScore(sd);
+      break;
+    }
     readQuestion(sd);
     if (writeAnswer(sd) == 0)
       break;
     getFeedback(sd);
+    counter++;
   }
 
   return 0;

@@ -57,11 +57,10 @@ int main()
   while (1)
   {
     int score = 0;
-
     client = accept(sd, (struct sockaddr *)&newAddr, &addr_size);
     if (client < 0)
     {
-      perror("Eroare la primire client\n");
+      perror("Eroare la accept\n");
       return errno;
     }
     printf("\nClient conectat de la adresa <%s> is port <%d>\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
@@ -91,6 +90,7 @@ int main()
         else
         {
           printf("INTREBARI TERMINATE \tSCOR FINAL: %d\n", score);
+          writeScore(client, score);
           close(client);
           close(sd);
           return 0;
@@ -98,12 +98,15 @@ int main()
         printf("Intrebare: %s\t%d\n", question, score);
         writeQuestion(client, question);
         readAnswer(client, answer);
-        if (addPoints(idQuestion, client, answer, inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port), score) == 0)
+
+        int isCorrect = addPoints(idQuestion, client, answer, inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port), score);
+        if (isCorrect == -1)
         {
           close(client);
           break; // optiunea quit
         }
-        score += 100;
+        else if (isCorrect == 1)
+          score += 100;
       }
     }
   }

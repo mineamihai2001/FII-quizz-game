@@ -14,17 +14,17 @@
 
 int errno;
 
-void getCredentials(int client, char username[], char password[])
+int getCredentials(int client, char username[], char password[])
 {
   if ((read(client, username, 100)) < 0)
   {
     perror("Eroare la primire credentiale\n");
-    exit(0);
+    return errno;
   }
   if ((read(client, password, 100)) < 0)
   {
     perror("Eroare la primire credentiale\n");
-    exit(0);
+    return errno;
   }
 }
 
@@ -96,27 +96,46 @@ int addPoints(int id, int client, char answer[], char *address, int port, int sc
   {
     printf("Deconectat de la %s:%d\n", address, port);
     close(client);
-    return 0;
+    return -1;
   }
   if (checkAnswer(id, answer) == 1)
   {
-    strcpy(response, "Raspuns corect");
+    strcpy(response, "Raspuns corect!");
     response[strlen(response)] = '\0';
     if ((write(client, response, strlen(response))) < 0)
     {
       perror("Eroare la trimitere intrebare\n");
       return errno;
     }
+    return 1;
   }
   else
   {
-    strcpy(response, "Raspuns gresit");
+    strcpy(response, "Raspuns gresit!");
     response[strlen(response)] = '\0';
     if ((write(client, response, strlen(response))) < 0)
     {
       perror("Eroare la trimitere intrebare\n");
       return errno;
     }
+    return 0;
   }
+}
+
+int writeScore(int client, int score)
+{
+  char s[10];
+  char* buff;
+  sprintf(s, "%d", score);
+  printf("Scorul este: %s\n", s);
+  buff = s;
+
+  if ((write(client, buff, sizeof(int*))) < 0)
+  {
+    perror("Eroare la trimitere punctaj\n");
+    return errno;
+  }
+  else
+    printf("Punctaj trimis cu succes:%s\n", buff);
   return 1;
 }
