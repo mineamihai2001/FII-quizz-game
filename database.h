@@ -59,7 +59,7 @@ int answer(void *data, int argc, char **argv, char **colName)
             if (strcmp(info, argv[i]) == 0)
             {
                 printf("Raspuns corect!\n");
-                strcpy(info, "1");
+                strcpy(info, "x");
             }
             else
             {
@@ -182,7 +182,7 @@ int checkAnswer(int id, char response[])
     {
         info[1] = '\0';
         printf("Operation done successfully = %s\n", info);
-        if (strcmp(info, "1") == 0) //raspuns corect
+        if (strcmp(info, "x") == 0) //raspuns corect
         {
             printf("Corect\n");
             return 1;

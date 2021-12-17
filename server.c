@@ -84,7 +84,7 @@ int main()
       while (1)
       {
         char question[200] = "", answer[100] = "";
-        int idQuestion = pickQuestion(ids, numberOfQuestions);
+        int idQuestion = pickQuestion(ids, 29);
         if (counter < numberOfQuestions)
         {
           getQuestion(idQuestion, question);
