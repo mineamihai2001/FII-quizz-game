@@ -14,6 +14,48 @@
 
 int errno;
 
+
+int inputNumberOfPlayers(int client)
+{
+  char buffer[10];
+  if((read(client, buffer, 10)) < 0)
+  {
+    perror("Eroare la primire numar clienti\n");
+    return errno;
+  }
+  int numberOfPlayers = atoi(buffer);
+  printf("Number of players: %d\n", numberOfPlayers);
+  return numberOfPlayers;
+}
+
+int waitForPlayers(int eta, int sd, int client, struct sockaddr_in newAddr, socklen_t addr_size)
+{
+
+  clock_t before = clock();
+  int msec = 0;
+  int numberOfClients = 0;
+  int k = 0;
+  do
+  {
+    client = accept(sd, (struct sockaddr *)&newAddr, &addr_size);
+    if (client < 0)
+    {
+      perror("Eroare la accept\n");
+      return errno;
+    }
+    ++numberOfClients;
+    printf("\nClient conectat de la adresa <%s> is port <%d> (numar clienti [%d])\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port), numberOfClients);
+
+    clock_t difference = clock() - before;
+    msec = difference * 1000 / CLOCKS_PER_SEC;
+    ++k;
+    printf("%d\n", k);
+  } while (msec < eta);
+
+  printf("Time taken %d seconds %d milliseconds\n", msec / 1000, msec % 1000);
+  return numberOfClients;
+}
+
 int getCredentials(int client, char username[], char password[])
 {
   if ((read(client, username, 100)) < 0)
@@ -125,12 +167,12 @@ int addPoints(int id, int client, char answer[], char *address, int port, int sc
 int writeScore(int client, int score)
 {
   char s[10];
-  char* buff;
+  char *buff;
   sprintf(s, "%d", score);
   printf("Scorul este: %s\n", s);
   buff = s;
 
-  if ((write(client, buff, sizeof(int*))) < 0)
+  if ((write(client, buff, sizeof(int *))) < 0)
   {
     perror("Eroare la trimitere punctaj\n");
     return errno;

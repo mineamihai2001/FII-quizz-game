@@ -12,12 +12,14 @@
 #define PORT 2728
 
 int errno;
+int adminConnected = 0;
 
 int main()
 {
   int sd, counter = 0, numberOfQuestions = 14;
   struct sockaddr_in serverAddr;
   char username[100], password[100];
+  char numberOfPlayers[10] = "";
 
   system("clear");
 
@@ -30,7 +32,7 @@ int main()
 
   serverAddr.sin_family = AF_INET;
   serverAddr.sin_port = htons(PORT);
-  serverAddr.sin_addr.s_addr = inet_addr("192.168.1.107");
+  serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
   if ((connect(sd, (struct sockaddr *)&serverAddr, sizeof(serverAddr))) < 0)
   {
@@ -47,22 +49,22 @@ int main()
     if (isLogged(sd, username))
       break;
   }
-  printf("Se porneste jocul. Nu apasati nicio tasta\n");
-  sleep(3);
-  system("clear");
-  printf("Asteptare intrebare.\n");
-  sleep(1);
-  system("clear");
-  printf("Asteptare intrebare..\n");
-  sleep(1);
-  system("clear");
+  // printf("Se porneste jocul. Nu apasati nicio tasta\n");
+  // sleep(3);
+  // system("clear");
+  // printf("Asteptare intrebare.\n");
+  // sleep(1);
+  // system("clear");
+  // printf("Asteptare intrebare..\n");
+  // sleep(1);
+  // system("clear");
 
   // comunicare cu serverul
   while (1)
   {
-    printf("Asteptare intrebare...\n");
-    sleep(3);
-    system("clear");
+    // printf("Asteptare intrebare...\n");
+    // sleep(3);
+    // system("clear");
     if (counter == numberOfQuestions)
     {
       getScore(sd);

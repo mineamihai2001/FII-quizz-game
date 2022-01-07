@@ -11,6 +11,26 @@
 
 int errno;
 
+int writeNumberOfPlayers(int sd, char numberOfPlayers[])
+{
+    if ((write(sd, numberOfPlayers, 10)) < 0)
+    {
+        perror("Eroare la scriere numarul de clienti\n");
+        return errno;
+    }
+    return 0;
+}
+
+void getPlayers(int sd, char numberOfPlayers[])
+{
+    printf("[admin] Introduceti numarul de jucatori\n");
+    fgets(numberOfPlayers, 10, stdin);
+
+    writeNumberOfPlayers(sd, numberOfPlayers);
+
+    printf("Lobby creat\n");
+}
+
 void inputCredentials(int sd, char username[], char password[])
 {
 
@@ -130,6 +150,5 @@ void animation(int ms)
         system("clear");
         printf("Asteptare intrebare..\n");
         sleep(ms);
-
     }
 }
