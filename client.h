@@ -37,9 +37,9 @@ void inputCredentials(int sd, char username[], char password[])
     printf("Introduceti username-ul: ");
     fgets(username, 100, stdin);
     username[strlen(username) - 1] = '\0';
-    printf("Introduceti parola: ");
-    fgets(password, 100, stdin);
-    password[strlen(password) - 1] = '\0';
+    // printf("Introduceti parola: ");
+    // fgets(password, 100, stdin);
+    // password[strlen(password) - 1] = '\0';
 }
 
 int sendCredentials(int sd, char username[], char password[])
@@ -49,11 +49,11 @@ int sendCredentials(int sd, char username[], char password[])
         perror("Eroare la trimitere username\n");
         return errno;
     }
-    if ((write(sd, password, 100)) < 0)
-    {
-        perror("Eroare la trimitere parola\n");
-        return errno;
-    }
+    // if ((write(sd, password, 100)) < 0)
+    // {
+    //     perror("Eroare la trimitere parola\n");
+    //     return errno;
+    // }
     return 1;
 }
 
@@ -72,10 +72,35 @@ int readQuestion(int sd)
 
 int writeAnswer(int sd)
 {
+    printf("Introduceti raspunsul: ");
+    fflush(stdout);
+    int rv;
+    fd_set set;
+    struct timeval timeout;
     char answer[100];
 
-    printf("Introduceti raspunsul: ");
-    fgets(answer, 100, stdin);
+    timeout.tv_sec = 5;
+    timeout.tv_usec = 0;
+
+    FD_ZERO(&set);
+    FD_SET(0, &set);
+
+    rv = select(1, &set, NULL, NULL, &timeout);
+    if (rv == -1)
+    {
+        perror("Eroare la select\n");
+        return errno;
+    }
+    else if (rv == 0)
+    {
+        system("clear");
+        printf("\n\n\n\t\t\tTimpul a expirat\n");
+        strcpy(answer, "");
+    }
+    else
+    {
+        fgets(answer, 100, stdin);
+    }
     answer[strlen(answer) - 1] = '\0';
     if ((write(sd, answer, 100)) == -1)
     {
@@ -135,7 +160,7 @@ int getScore(int sd)
         return errno;
     }
     score[bytes] = '\0';
-    system("clear");
+    // system("clear");
     printf("\n\n\n\t\t\t\t\tScor final: %s\n\n\n\n", score);
     return 0;
 }

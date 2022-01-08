@@ -16,10 +16,13 @@ int adminConnected = 0;
 
 int main()
 {
-  int sd, counter = 0, numberOfQuestions = 14;
+  int sd, counter = 1, numberOfQuestions = 4;
   struct sockaddr_in serverAddr;
   char username[100], password[100];
   char numberOfPlayers[10] = "";
+
+  clock_t before = clock();
+  int msec = 0;
 
   system("clear");
 
@@ -40,7 +43,7 @@ int main()
     return errno;
   }
   printf("Conexiune cu success la server\n\n");
-
+  sleep(5);
   // verificare credentiale
   while (1)
   {

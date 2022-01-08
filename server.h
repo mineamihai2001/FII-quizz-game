@@ -58,16 +58,18 @@ int waitForPlayers(int eta, int sd, int client, struct sockaddr_in newAddr, sock
 
 int getCredentials(int client, char username[], char password[])
 {
+  printf("Receveing credentials...\n");
   if ((read(client, username, 100)) < 0)
   {
     perror("Eroare la primire credentiale\n");
     return errno;
   }
-  if ((read(client, password, 100)) < 0)
-  {
-    perror("Eroare la primire credentiale\n");
-    return errno;
-  }
+  else printf("Credentiale primite\n");
+  // if ((read(client, password, 100)) < 0)
+  // {
+  //   perror("Eroare la primire credentiale\n");
+  //   return errno;
+  // }
 }
 
 int signin(int client)
