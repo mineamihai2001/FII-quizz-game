@@ -87,9 +87,10 @@ int main()
 
   while (1)
   {
+    numberOfClients = 0;
     for (int i = 0; i < 3; ++i)
     {
-      idQuestion = pickQuestion(ids, 29);
+      idQuestion = pickQuestion(ids, 8);
       questionsArray[i] = idQuestion;
       printf("%d, ", questionsArray[i]);
     }
@@ -283,8 +284,9 @@ int main()
             printf("INTREBARI TERMINATE \tSCOR FINAL: %d\n", score);
             writeScore(currentClient, score);
             close(currentClient);
-            close(sd);
-            return 0;
+            // close(sd);
+            break;
+            // return 0;
           }
 
           printf("%d) Intrebare: %s\t%d\n", questionsArray[idQuestion], question, score);

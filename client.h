@@ -176,32 +176,3 @@ int getScore(int sd)
     printf("\n\n\n\t\t\t\t\tScor final: %s\n\n\n\n", score);
     return 0;
 }
-
-void animation(int ms)
-{
-    for (int i = 0; i < 1; ++i)
-    {
-        system("clear");
-        printf("Asteptare intrebare.\n");
-        sleep(ms);
-        system("clear");
-        printf("Asteptare intrebare..\n");
-        sleep(ms);
-    }
-}
-
-void loadingScreen()
-{
-    printf("Se porneste jocul. Nu apasati nicio tasta\n");
-    sleep(3);
-    system("clear");
-    printf("Jocul incepe in 3\n");
-    sleep(1);
-    system("clear");
-    printf("Jocul incepe in 2\n");
-    sleep(1);
-    system("clear");
-    printf("Jocul incepe in 1\n");
-    sleep(3);
-    system("clear");
-}
