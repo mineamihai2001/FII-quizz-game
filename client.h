@@ -78,8 +78,10 @@ int writeAnswer(int sd)
     fd_set set;
     struct timeval timeout;
     char answer[100];
+    int timeForRespose = 0;
+    char timer[3];
 
-    timeout.tv_sec = 5;
+    timeout.tv_sec = 10;
     timeout.tv_usec = 0;
 
     FD_ZERO(&set);
@@ -93,20 +95,30 @@ int writeAnswer(int sd)
     }
     else if (rv == 0)
     {
-        system("clear");
         printf("\n\n\n\t\t\tTimpul a expirat\n");
         strcpy(answer, "");
     }
     else
     {
+        timeForRespose = 10 - timeout.tv_sec;
         fgets(answer, 100, stdin);
     }
     answer[strlen(answer) - 1] = '\0';
+    sprintf(timer, "%d", timeForRespose);
+    timer[strlen(timer)] = '\0';
+
     if ((write(sd, answer, 100)) == -1)
     {
         perror("Eroare la trimitere raspuns\n");
         return errno;
     }
+
+    if ((write(sd, timer, strlen(timer))) < 0)
+    {
+        perror("Eroare la trimitere timp\n");
+        return errno;
+    }
+
     if (strcmp(answer, "\\quit") == 0)
     {
         close(sd);
@@ -120,8 +132,8 @@ int isLogged(int sd, char username[])
     char response[100];
     if ((read(sd, response, 100)) < 0)
     {
-        perror("Eroare la primire feedback\n");
-        return errno;
+        printf("Joc in desfasurare. Asteptati urmatorul joc\n");
+        exit(0);
     }
     if (response[0] == '1')
     {
@@ -145,7 +157,7 @@ int getFeedback(int sd)
     else
     {
         buffer[bytes] = '\0';
-        printf("\n\t\tREZULTAT: %s\n\n", buffer);
+        printf("\n\t\t\tREZULTAT: %s\n\n", buffer);
     }
     return 1;
 }
@@ -176,4 +188,20 @@ void animation(int ms)
         printf("Asteptare intrebare..\n");
         sleep(ms);
     }
+}
+
+void loadingScreen()
+{
+    printf("Se porneste jocul. Nu apasati nicio tasta\n");
+    sleep(3);
+    system("clear");
+    printf("Jocul incepe in 3\n");
+    sleep(1);
+    system("clear");
+    printf("Jocul incepe in 2\n");
+    sleep(1);
+    system("clear");
+    printf("Jocul incepe in 1\n");
+    sleep(3);
+    system("clear");
 }

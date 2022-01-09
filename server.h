@@ -14,11 +14,10 @@
 
 int errno;
 
-
 int inputNumberOfPlayers(int client)
 {
   char buffer[10];
-  if((read(client, buffer, 10)) < 0)
+  if ((read(client, buffer, 10)) < 0)
   {
     perror("Eroare la primire numar clienti\n");
     return errno;
@@ -28,43 +27,16 @@ int inputNumberOfPlayers(int client)
   return numberOfPlayers;
 }
 
-int waitForPlayers(int eta, int sd, int client, struct sockaddr_in newAddr, socklen_t addr_size)
-{
-
-  clock_t before = clock();
-  int msec = 0;
-  int numberOfClients = 0;
-  int k = 0;
-  do
-  {
-    client = accept(sd, (struct sockaddr *)&newAddr, &addr_size);
-    if (client < 0)
-    {
-      perror("Eroare la accept\n");
-      return errno;
-    }
-    ++numberOfClients;
-    printf("\nClient conectat de la adresa <%s> is port <%d> (numar clienti [%d])\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port), numberOfClients);
-
-    clock_t difference = clock() - before;
-    msec = difference * 1000 / CLOCKS_PER_SEC;
-    ++k;
-    printf("%d\n", k);
-  } while (msec < eta);
-
-  printf("Time taken %d seconds %d milliseconds\n", msec / 1000, msec % 1000);
-  return numberOfClients;
-}
-
 int getCredentials(int client, char username[], char password[])
 {
-  printf("Receveing credentials...\n");
+  printf("Receveing credentials...\n\n");
   if ((read(client, username, 100)) < 0)
   {
     perror("Eroare la primire credentiale\n");
     return errno;
   }
-  else printf("Credentiale primite\n");
+  else
+    printf("Credentiale primite\n");
   // if ((read(client, password, 100)) < 0)
   // {
   //   perror("Eroare la primire credentiale\n");
@@ -101,6 +73,7 @@ int signin(int client)
 
 int pickQuestion(int ids[], int numberOfQuestions)
 {
+  srand(time(0));
   int idQuestion = rand() % numberOfQuestions + 1;
   while (ids[idQuestion])
     idQuestion = rand() % numberOfQuestions + 1;
@@ -124,13 +97,29 @@ int writeQuestion(int client, char question[])
 
 int readAnswer(int client, char answer[])
 {
+  int timeForResponse = 0;
+  char timer[10] = "";
+  int bytes;
+
   // primire raspuns
-  if ((read(client, answer, 1024)) < 0)
+  if ((bytes = read(client, answer, 100)) < 0)
   {
     perror("Eroare la primire raspuns\n");
     return errno;
   }
-  printf("Raspunsul primit este: %s\n", answer);
+  answer[bytes] = '\0';
+  printf("Raspuns primit |%s|\n", answer);
+
+  if ((bytes = read(client, timer, 2)) < 0)
+  {
+    perror("Eroare la primire timp\n");
+    return errno;
+  }
+  timer[bytes] = '\0';
+  printf("Timp primit: %s\n", timer);
+
+  timeForResponse = atoi(timer);
+  return timeForResponse;
 }
 
 int addPoints(int id, int client, char answer[], char *address, int port, int score)

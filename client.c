@@ -20,6 +20,7 @@ int main()
   struct sockaddr_in serverAddr;
   char username[100], password[100];
   char numberOfPlayers[10] = "";
+  int firstQuestion = 0;
 
   clock_t before = clock();
   int msec = 0;
@@ -42,8 +43,8 @@ int main()
     perror("Eroare la connect()\n");
     return errno;
   }
-  printf("Conexiune cu success la server\n\n");
-  sleep(5);
+  printf("Asteptare clienti... (nu apasati nicio tasta)\n\n");
+  sleep(10);
   // verificare credentiale
   while (1)
   {
@@ -52,22 +53,12 @@ int main()
     if (isLogged(sd, username))
       break;
   }
-  // printf("Se porneste jocul. Nu apasati nicio tasta\n");
-  // sleep(3);
-  // system("clear");
-  // printf("Asteptare intrebare.\n");
-  // sleep(1);
-  // system("clear");
-  // printf("Asteptare intrebare..\n");
-  // sleep(1);
-  // system("clear");
+
 
   // comunicare cu serverul
   while (1)
   {
-    // printf("Asteptare intrebare...\n");
-    // sleep(3);
-    // system("clear");
+
     if (counter == numberOfQuestions)
     {
       getScore(sd);

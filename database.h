@@ -5,25 +5,7 @@
 
 char info[1000];
 
-void openDB()
-{
-    sqlite3 *db;
-    char *zErrMsg = 0;
-    int rc;
-
-    rc = sqlite3_open("test.db", &db);
-
-    if (rc)
-    {
-        fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
-        exit(0);
-    }
-    else
-    {
-        fprintf(stderr, "Opened database successfully\n\n");
-    }
-    sqlite3_close(db);
-}
+//sursa: documentatie sqlite3
 
 //data = data int the 4th argument of sqlite3_exec
 //argc = the number of columns in row
